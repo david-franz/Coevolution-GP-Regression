@@ -23,12 +23,6 @@ class GP_Regression:
 	for x in float_range_array:
 		mapping_dictionary[x] = function_to_find(x)
 
-	def if_function(self, x, constant, individual1, individual2):
-		if x <= constant:
-			return individual1
-		else:
-			return individual2
-
 	def protected_division(self, left, right):
 		if right == 0:
 			return 1
@@ -40,7 +34,6 @@ class GP_Regression:
 		# Transform the tree expression in a callable function
 		func = toolbox.compile(expr=individual)
 
-		#print(individual)
 		# Evaluate the mean squared error between the created function and the given function points
 		squared_error = 0
 		for x in float_range_array:
@@ -52,8 +45,6 @@ class GP_Regression:
 		return (1 / len(float_range_list)) * squared_error,
 
 	def run(self):
-		program_t0 = time.time()
-
 		pset = gp.PrimitiveSet("MAIN", 1)
 		pset.addPrimitive(operator.add, 2)
 		pset.addPrimitive(operator.sub, 2)
@@ -101,5 +92,3 @@ class GP_Regression:
 		print("function = {}\n".format(hof[0]))
 		print("fitness = {}".format(evaluate_symbol_regression(hof[0])))
 		print("------------------------------------------------------------\n")
-
-		print(f"program runtime = {time.time() - program_t0}")
