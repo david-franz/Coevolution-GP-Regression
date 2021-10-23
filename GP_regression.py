@@ -90,30 +90,20 @@ f2_toolbox.register("mutate", gp.mutUniform, expr=f2_toolbox.expr_mut, pset=pset
 f2_toolbox.decorate("mate", gp.staticLimit(key=operator.attrgetter("height"), max_value=depth_of_tree))
 f2_toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max_value=depth_of_tree))
 
-stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
-stats_size = tools.Statistics(len)
-mstats = tools.MultiStatistics(fitness=stats_fit, size=stats_size)
-mstats.register("avg", np.mean)
-mstats.register("std", np.std)
-mstats.register("min", np.min)
-mstats.register("max", np.max)
-
 if __name__ == '__main__':
 	f1_pop = f1_toolbox.population(n=population_size)
 	f2_pop = f2_toolbox.population(n=population_size)
 
 	f1_best = tools.HallOfFame(1)
 	f2_best = tools.HallOfFame(1)
-
-	threshold = 10
 	
-	#while (1/2)*(evaluate_f1(f1_best[0]) + evaluate_f2(f2_best[0])) > threshold:
-	f1_pop, log = algorithms.eaSimple(f1_pop, f1_toolbox, 0.5, 0.1, 40, stats=mstats, halloffame=f1_best, verbose=False)
+	f1_pop, log = algorithms.eaSimple(f1_pop, f1_toolbox, 0.5, 0.1, 40, halloffame=f1_best, verbose=False)
 	f2_pop = algorithms.eaSimple(f2_pop, f2_toolbox, 0.5, 0.1, 40, halloffame=f2_best, verbose=False)
 
 	print("\n------------------------------------------------------------")
 	print('''
 {} if x > 0
 {} if x ≤ 0'''.format(f1_best[0], f2_best[0]))
-	print("fitness = {}".format(evaluate_f1(f1_best[0])))
+	print("fitness = {}".format(evaluate_f1(f1_best[0]))) # this is the line I will need to change: some way of evaluating the whole function
+	print("Note that a fitness of 0 means that there is zero squared error between the found function and the function we were searching for.")
 	print("------------------------------------------------------------\n")
